@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.es.service.index.dao.mapper.ResourcesMapper">
+
+    <resultMap id="resourcesTOResultMap" type="ResourcesTO">
+        <id property="id" column="ID"/>
+        <result property="type" column="TYPE"/>
+        <result property="name" column="NAME"/>
+        <result property="enName" column="ENNAME"/>
+        <result property="alias" column="ALIAS"/>
+        <result property="tags" column="TAGS"/>
+        <result property="typos" column="TYPOSLIST"/>
+        <result property="icon" column="ICON"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="hot" column="HOT"/>
+        <result property="modifiDate" column="MODIFIDATE"/>
+        <result property="createDate" column="CREATEDATE"/>
+        <result property="status" column="STATUS"/>
+    </resultMap>
+    
+    
+    <select id="listAll" resultMap="resourcesTOResultMap">
+    	<![CDATA[
+			SELECT
+				T.ID,
+				T.TYPE,
+				T.`NAME`,
+				T.ENNAME,
+				T.ALIAS,
+				T.TAGS,
+				T.TYPOS,
+				T.ICON,
+				T.DESCRIPTION,
+				T.HOT,
+				T.MODIFIDATE,
+				T.CREATEDATE,
+				T.`STATUS`
+			FROM
+				RESOURCES T
+			WHERE
+				T. STATUS = 1
+			AND T.ID > #{startId}
+			LIMIT #{pageSize}
+    	]]>
+    </select>
+    <select id="listIncrement" resultMap="resourcesTOResultMap">
+    	<![CDATA[
+			SELECT
+				T.ID,
+				T.TYPE,
+				T.`NAME`,
+				T.ENNAME,
+				T.ALIAS,
+				T.TAGS,
+				T.TYPOS,
+				T.ICON,
+				T.DESCRIPTION,
+				T.HOT,
+				T.MODIFIDATE,
+				T.CREATEDATE,
+				T.`STATUS`
+			FROM
+				RESOURCES T
+			WHERE
+				T.ID > #{startId}
+			AND T.MODIFIDATE > #{date}
+			AND T.MODIFIDATE < now()
+			LIMIT #{pageSize}
+    	]]>
+    </select>
+    <select id="query" resultMap="resourcesTOResultMap">
+    	<![CDATA[
+			SELECT
+				T.ID,
+				T.TYPE,
+				T.`NAME`,
+				T.ENNAME,
+				T.ALIAS,
+				T.TAGS,
+				T.TYPOS,
+				T.ICON,
+				T.DESCRIPTION,
+				T.HOT,
+				T.MODIFIDATE,
+				T.CREATEDATE,
+				T.`STATUS`
+			FROM
+				RESOURCES T
+			WHERE
+				T.ID = #{key}
+    	]]>
+    </select>
+    
+</mapper>

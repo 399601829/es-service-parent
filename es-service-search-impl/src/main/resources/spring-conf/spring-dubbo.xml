@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+         http://www.springframework.org/schema/aop  
+    	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<dubbo:monitor protocol="registry" />
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="${app.name}" owner="${app.owner.name}"
+		organization="${app.organization.name}" />
+
+
+	<!-- 使用zookeeper广播注册中心暴露服务地址 file="${connect.cache.path}/output/connect.cache" -->
+	<dubbo:registry id="dubbo-service-registry" protocol="${registry.protocol}"
+		address="${registry.address}" timeout="5000"  file="${connect.cache.path}/output/connect.cache"/>
+
+	<dubbo:protocol name="${service.protocol}" port="${service.port}"
+		accesslog="/usr/local/dubbo/es-service-search-provider/logs/access/es-service-search-provider-dubbo.log" />
+
+
+	<!-- 暴露服务配置 -->
+	<dubbo:service
+		interface="com.es.service.search.SearchRemoteService"
+		ref="searchRemoteService" version="1.0.0" timeout="3000" retries="0"
+		loadbalance="random" />
+
+
+
+
+</beans>

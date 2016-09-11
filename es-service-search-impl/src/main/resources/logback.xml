@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+	<property name="LOG_DIR" value="/home/hailin0/logs" />
+
+	<!-- 控制台日志 -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%5level] %logger{36}[%file:%line] - %msg%n</Pattern>
+		</encoder>
+	</appender>
+
+	<!-- 运行日志 -->
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/run/context-es-service-search.log.%d{yyyy-MM-dd}
+			</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%5level] %logger{36}[%file:%line]- %msg%n</Pattern>
+			<charset>UTF-8</charset> 
+		</encoder>
+	</appender>
+	
+	<!-- 慢请求统计日志信息 -->
+	<appender name="slowrequestLogger"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/context-es-service-search-slowrequest.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="slowrequestLogger" level="INFO" additivity="false">
+		<appender-ref ref="slowrequestLogger" />
+	</logger>
+
+
+	<logger name="com.es.service" level="debug" />
+	<logger name="org.apache.zookeeper" level="WARN"></logger>
+	<logger name="org.springframework" level="ERROR"></logger>
+	<logger name="org.apache.ibatis" level="ERROR"></logger>
+	<logger name="org.apache" level="ERROR"></logger>
+	<logger name="org.mybatis.spring" level="ERROR"></logger>
+	<logger name="java.sql" level="ERROR"></logger>
+
+
+	<root level="INFO">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+
+</configuration>
