@@ -1,0 +1,44 @@
+
+
+
+“‘œ¬’≥Ã˘µΩelasticsearch.yml
+
+# ----------------------------------log------------------------------------------
+# log level the config
+# type: query | fetch | index
+# start log£∫ ${path.logs}/${cluster.name}.log
+# slow query log£∫ ${path.logs}/${cluster.name}_index_search_slowlog.log
+# slow index log£∫ ${path.logs}/${cluster.name}_index_indexing_slowlog.log
+
+# log save path 
+path.logs: /usr/local/elasticsearch-1.1.2/logs
+
+#query time
+index.search.slowlog.threshold.query.error: 5s
+index.search.slowlog.threshold.query.warn: 3s
+index.search.slowlog.threshold.query.info: 1s
+index.search.slowlog.threshold.query.debug: 500ms
+index.search.slowlog.threshold.query.trace: 300ms
+#fetch time
+index.search.slowlog.threshold.fetch.error: 2s
+index.search.slowlog.threshold.fetch.warn: 1s
+index.search.slowlog.threshold.fetch.info: 800ms
+index.search.slowlog.threshold.fetch.debug: 500ms
+index.search.slowlog.threshold.fetch.trace: 200ms
+#record request content length
+#index.search.slowlog.source: 1000
+#level
+index.search.slowlog.level: warn
+
+
+#index time
+index.indexing.slowlog.threshold.index.error: 10s
+index.indexing.slowlog.threshold.index.warn: 7s
+index.indexing.slowlog.threshold.index.info: 5s
+index.indexing.slowlog.threshold.index.debug: 2s
+index.indexing.slowlog.threshold.index.trace: 500ms
+#record request content length
+index.indexing.slowlog.source: 1000
+#level
+index.indexing.slowlog.level: warn
+# ----------------------------------log------------------------------------------

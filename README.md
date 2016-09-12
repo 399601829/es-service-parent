@@ -14,16 +14,5 @@
   后台服务web工程，提供在线的热更新词典管理（基于ik分词）、搜索查询页面等功能。
  
 
-# 支持的搜索模式示例keyWord
-
-    请问我的世界好玩吗
-    我的世界好玩吗
-    我的世界 好玩吗
-    我的世界 战争
-    我的世界
-    我的世
-    wodeshijie
-    wodeshi
-    wdsj
-    wds
-  
+# 后台演示
+    ![Alt 演示效果](/es-service-doc/doc/demo.png "演示效果")  
