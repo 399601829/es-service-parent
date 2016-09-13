@@ -11,17 +11,13 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.BoostingQueryBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.PrefixQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.index.query.QueryStringQueryBuilder.Operator;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.index.query.ScriptFilterBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder;
@@ -30,14 +26,14 @@ import com.es.service.common.client.ESClient;
 import com.es.service.common.conf.Constants;
 import com.es.service.common.type.IndexType;
 import com.es.service.search.to.Condition;
-import com.es.service.search.to.EsRequest;
 import com.es.service.search.to.EsFilterScript;
+import com.es.service.search.to.EsRequest;
 import com.es.service.search.to.ScoreScript;
 import com.es.service.search.to.SearchCondition;
 import com.es.service.search.type.ConditionType;
-import com.es.service.search.type.SearchType;
 import com.es.service.search.util.KeyWordUtil;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Booleans;
 
 /**
  * 构建查询体
@@ -162,9 +158,18 @@ public class EsQueryBuilder {
             }
         }
 
-        // 条件不为空，以及分词验证
-        if (!searchCondition.getConditions().isEmpty()
-        /* && !isContainAnalyzeToken(searchCondition.getConditions()) */) {
+        // 条件不为空
+        if (!searchCondition.getConditions().isEmpty()) {
+            // 分词验证
+            boolean request_analyzetoken = Constants.request_analyzeToken;
+            String request_analyzetoken_key = request.getSafeExtend().get(
+                    Constants.REQUEST_ANALYZETOKEN_KEY);
+            if (StringUtils.isNotBlank(request_analyzetoken_key)) {
+                request_analyzetoken = Boolean.parseBoolean(request_analyzetoken_key);
+            }
+            request_analyzetoken = request_analyzetoken ? requestAnalyzeToken(searchCondition
+                    .getConditions()) : false;
+
             // 构建搜索逻辑
             switch (searchCondition.getSearchType()) {
             case TERM:
@@ -393,7 +398,7 @@ public class EsQueryBuilder {
      * @param conditions
      * @return
      */
-    private boolean isContainAnalyzeToken(List<Condition> conditions) {
+    private boolean requestAnalyzeToken(List<Condition> conditions) {
         if (conditions != null) {
             IndexType indexType = IndexType.getIndexType(indexName);
             String realIndex = "";

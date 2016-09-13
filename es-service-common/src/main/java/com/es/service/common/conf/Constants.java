@@ -45,11 +45,21 @@ public final class Constants {
      */
     public static final String score_mode = Conf.getString("search.score_mode");
 
+    /**
+     * 请求词是否分析处理
+     */
+    public static final boolean request_analyzeToken = Conf.getBoolean("request.analyzeToken");
+    
     /****************************** 扩展常用key ***********************************/
 
     /**
      * 脚本得分与相似度得分聚合模式
      */
     public static final String BOOST_MODE_KEY = "BOOST_MODE";
-
+    
+    /**
+     * 请求词是否分析处理
+     */
+    public static final String REQUEST_ANALYZETOKEN_KEY = "REQUEST_ANALYZETOKEN_KEY";
+    
 }
