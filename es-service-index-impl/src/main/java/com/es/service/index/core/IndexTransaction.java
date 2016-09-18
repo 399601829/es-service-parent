@@ -488,11 +488,12 @@ public class IndexTransaction {
             }
 
             // 建议器
-            if (fileds.isIssuggest()) {
-                contentBuilder.startObject("SUGGEST").field("type", "completion")
-                        .field("index_analyzer", "lowercase_keyword")
-                        .field("search_analyzer", "lowercase_keyword").field("payloads", true)
-                        .endObject();
+            if (fileds.getSuggest() != null) {
+                contentBuilder.startObject(fileds.getSuggest().key)
+                        .field("type", fileds.getSuggest().type)
+                        .field("index_analyzer", fileds.getSuggest().getIndexAnalyzer())
+                        .field("search_analyzer", fileds.getSuggest().getSearchAnalyzer())
+                        .field("payloads", fileds.getSuggest().isPayloads()).endObject();
             }
 
             // 构造mapping请求

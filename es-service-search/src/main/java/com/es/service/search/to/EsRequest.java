@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.es.service.common.type.IndexType;
+import com.es.service.common.util.CompletionSuggest.SuggestQuery;
 import com.es.service.search.type.ConditionType;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -62,7 +63,7 @@ public class EsRequest implements Serializable {
      * 需要返回的列
      */
     private List<String> resultFileds;
-    
+
     /**
      * 需要排序的列
      */
@@ -84,9 +85,9 @@ public class EsRequest implements Serializable {
     private Map<String, String> extend;
 
     /**
-     * 关键字
+     * 建议器
      */
-    private String keyword;
+    private SuggestQuery suggestQuery;
 
     public EsRequest() {
 
@@ -96,9 +97,17 @@ public class EsRequest implements Serializable {
      * 构造方法
      * 
      * @param indexType 搜索的索引
+     */
+    public EsRequest(IndexType indexType) {
+        this(indexType, 0, 0, null);
+    }
+    
+    /**
+     * 构造方法
+     * 
+     * @param indexType 搜索的索引
      * @param pn
      * @param ps
-     * @throws Exception
      */
     public EsRequest(IndexType indexType, int pn, int ps) {
         this(indexType, pn, ps, null);
@@ -111,7 +120,6 @@ public class EsRequest implements Serializable {
      * @param pn
      * @param ps
      * @param types type列表
-     * @throws Exception
      */
     public EsRequest(IndexType indexType, int pn, int ps, IndexType... types) {
         this.pn = pn > 0 ? pn : 1;
@@ -195,6 +203,7 @@ public class EsRequest implements Serializable {
         }
         return resultFileds;
     }
+
     /**
      * 需要排序的列
      * 
@@ -277,20 +286,6 @@ public class EsRequest implements Serializable {
     }
 
     /**
-     * @return the keyword
-     */
-    public String getKeyword() {
-        return keyword;
-    }
-
-    /**
-     * @param keyword the keyword to set
-     */
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
-
-    /**
      * @return the highlightFields
      */
     public EsHighlightFields getSafeHighlightFields() {
@@ -306,4 +301,22 @@ public class EsRequest implements Serializable {
     public void setHighlightFields(EsHighlightFields highlightFields) {
         this.highlightFields = highlightFields;
     }
+
+    /**
+     * @return the highlightFields
+     */
+    public SuggestQuery getSafeSuggestQuery() {
+        if (suggestQuery == null) {
+            suggestQuery = new SuggestQuery();
+        }
+        return suggestQuery;
+    }
+
+    /**
+     * @param suggestQuery the suggestQuery to set
+     */
+    public void setSuggestQuery(SuggestQuery suggestQuery) {
+        this.suggestQuery = suggestQuery;
+    }
+    
 }

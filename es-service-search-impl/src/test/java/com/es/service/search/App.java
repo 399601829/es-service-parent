@@ -94,8 +94,9 @@ public class App {
     @Test
     public void test2() {
 
-        EsRequest request = new EsRequest(IndexType.RESOURCES, 1, 10);
-        request.setKeyword("大话");
+        EsRequest request = new EsRequest(IndexType.RESOURCES);
+        request.getSafeSuggestQuery().setText("大话");
+        
         EsResponse immediateSearch = EsSearch.suggestSearch(request);
         System.out.println(immediateSearch);
     }

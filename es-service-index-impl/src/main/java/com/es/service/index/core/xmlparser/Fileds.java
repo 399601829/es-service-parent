@@ -2,6 +2,8 @@ package com.es.service.index.core.xmlparser;
 
 import java.util.List;
 
+import com.es.service.common.util.CompletionSuggest;
+
 /**
  * 
  * 完整的配置文档
@@ -36,8 +38,8 @@ public class Fileds {
     /**
      * 建议器
      */
-    private boolean issuggest = false;
-
+    private CompletionSuggest suggest;
+    
     /**
      * @return the indexName
      */
@@ -95,17 +97,17 @@ public class Fileds {
     }
 
     /**
-     * @return the issuggest
+     * @return the suggest
      */
-    public boolean isIssuggest() {
-        return issuggest;
+    public CompletionSuggest getSuggest() {
+        return suggest;
     }
 
     /**
-     * @param issuggest the issuggest to set
+     * @param suggest the suggest to set
      */
-    public void setIssuggest(boolean issuggest) {
-        this.issuggest = issuggest;
+    public void setSuggest(CompletionSuggest suggest) {
+        this.suggest = suggest;
     }
 
 }

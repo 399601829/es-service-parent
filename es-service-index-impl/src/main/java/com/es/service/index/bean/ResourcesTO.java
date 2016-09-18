@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.es.service.common.util.CompletionSuggest;
+import com.es.service.common.util.CompletionSuggest.SuggestBuilder;
 import com.es.service.common.util.PinYinHelper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Sets;
@@ -124,8 +126,8 @@ public class ResourcesTO extends BaseTO {
     /**
      * 建议器-自动补缺
      */
-    @JsonProperty("SUGGEST")
-    private Map<String, Object> suggest;
+    @JsonProperty(CompletionSuggest.key)
+    private SuggestBuilder suggest;
 
     /**
      * @return the type
@@ -219,7 +221,8 @@ public class ResourcesTO extends BaseTO {
                 String[] str = alias.split(",");
                 for (int i = 0; i < str.length; i++) {
                     all.append(PinYinHelper.getInstance().getAnalyzePinYin(str[i])).append(",");
-                    all.append(PinYinHelper.getInstance().getAnalyzePinYinPrefix(str[i])).append(",");
+                    all.append(PinYinHelper.getInstance().getAnalyzePinYinPrefix(str[i])).append(
+                            ",");
                 }
             }
             setName_pinyin_query(all.toString());
@@ -363,8 +366,10 @@ public class ResourcesTO extends BaseTO {
     /**
      * @return the suggest
      */
-    public Map<String, Object> getSuggest() {
-        setSuggest();
+    public SuggestBuilder getSuggest() {
+        if(suggest == null){
+            setSuggest();
+        }
         return suggest;
     }
 
@@ -386,26 +391,15 @@ public class ResourcesTO extends BaseTO {
      * @param suggest the suggest to set
      */
     public void setSuggest() {
-        Map<String, Object> map_suggest = new HashMap<String, Object>();
-        Set<String> set = Sets.newHashSet();
-        Set<String> pinYin_Index = PinYinHelper.getInstance().getPinYin_Index(name);
-        if (pinYin_Index != null) {
-            set.addAll(pinYin_Index);
-        }
-        Set<String> prefixPinYin_Index = PinYinHelper.getInstance().getPinYinPrefix_Index(name);
-        if (prefixPinYin_Index != null) {
-            set.addAll(prefixPinYin_Index);
-        }
-
         Map<String, Object> payload = new HashMap<String, Object>();
         payload.put("RES_KEY", getRes_key());
         payload.put("ID", getId());
         payload.put("NAME", getName());
-        map_suggest.put("input", set);
-        map_suggest.put("output", name);
-        map_suggest.put("payload", payload);
-        map_suggest.put("weight", (int) hot);
-        this.suggest = map_suggest;
+
+        SuggestBuilder builder = new SuggestBuilder(name, payload);
+        builder.setWeight(hot);
+
+        this.suggest = builder;
     }
 
 }

@@ -59,9 +59,6 @@ public class Filed {
     // copy字段内容
     private List<Filed> names;
 
-    // 建议器
-    private boolean isSuggest = false;
-
     // 权重
     private double weight;
 
@@ -300,20 +297,6 @@ public class Filed {
      */
     public void setNames(List<Filed> names) {
         this.names = names;
-    }
-
-    /**
-     * @return the isSuggest
-     */
-    public boolean isSuggest() {
-        return isSuggest;
-    }
-
-    /**
-     * @param isSuggest the isSuggest to set
-     */
-    public void setSuggest(boolean isSuggest) {
-        this.isSuggest = isSuggest;
     }
 
     /**

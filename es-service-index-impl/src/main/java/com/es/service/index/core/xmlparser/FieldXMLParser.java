@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.es.service.common.type.IndexType;
+import com.es.service.common.util.CompletionSuggest;
 import com.es.service.index.common.conf.ClassPathResourcesReader;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -110,7 +111,17 @@ public class FieldXMLParser {
                 fileds.setKey(element.attributeValue("key"));
             }
             if (element.getName().equals("suggest")) {
-                fileds.setIssuggest(true);
+                CompletionSuggest suggest = new CompletionSuggest();
+                if(element.attributeValue("indexAnalyzer") != null){
+                    suggest.setIndexAnalyzer(element.attributeValue("indexAnalyzer"));
+                }
+                if(element.attributeValue("searchAnalyzer") != null){
+                    suggest.setSearchAnalyzer(element.attributeValue("searchAnalyzer"));
+                }
+                if(element.attributeValue("payloads") != null){
+                    suggest.setPayloads(Boolean.valueOf(element.attributeValue("payloads")));
+                }
+                fileds.setSuggest(suggest);
             }
             if (element.getName().equals("field")) {
                 filed.setName(element.attributeValue("name"));

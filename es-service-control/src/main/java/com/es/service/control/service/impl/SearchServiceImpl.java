@@ -74,8 +74,7 @@ public class SearchServiceImpl implements SearchService {
         request.getSafeHighlightFields().addField("NAME").addField("NAME_QUERY");
 
         EsResponse response = remoteService.search(request, 10, TimeUnit.SECONDS);
-        // request.setKeyword(keyWord);
-        // EsResponse response = remoteService.suggestSearch(request);
+
 
         return JsonUtil.toJson(response);
     }

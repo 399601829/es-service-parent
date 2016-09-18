@@ -10,17 +10,21 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.suggest.SuggestRequestBuilder;
 import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.suggest.Suggest.Suggestion.Entry;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion.Entry.Option;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionContext;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionFuzzyBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.es.service.common.client.ESClient;
 import com.es.service.common.conf.Constants;
+import com.es.service.common.util.CompletionSuggest.SuggestQuery;
 import com.es.service.common.util.JsonUtil;
 import com.es.service.common.util.PinYinHelper;
 import com.es.service.search.to.EsRequest;
@@ -59,14 +63,9 @@ public class EsSearch {
         int from = request.getPn() < 0 ? 0 : (request.getPn() - 1) * size;
 
         // 主查询体
-        SearchRequestBuilder srb = ESClient
-                .getClient()
-                .prepareSearch(indexname)
-                .setTypes(request.getTypes().toArray(new String[] {}))
-                .setFrom(from)
-                .setSize(size)
-                .setPreference(Constants.preference)
-                .setTimeout(new TimeValue(timeout, timeUnit));
+        SearchRequestBuilder srb = ESClient.getClient().prepareSearch(indexname)
+                .setTypes(request.getTypes().toArray(new String[] {})).setFrom(from).setSize(size)
+                .setPreference(Constants.preference).setTimeout(new TimeValue(timeout, timeUnit));
 
         // 构造查询体
         EsQueryBuilder esQueryBuilder = new EsQueryBuilder(request);
@@ -101,8 +100,9 @@ public class EsSearch {
             }
             record.put("ESSCORE", hit.getScore());
             // 高亮返回
-            if (request.getSafeHighlightFields()!=null) {
-                record.putAll(EsHighLight.getHighlight(hit, request.getSafeHighlightFields().getFields()));
+            if (request.getSafeHighlightFields() != null) {
+                record.putAll(EsHighLight.getHighlight(hit, request.getSafeHighlightFields()
+                        .getFields()));
             }
             result.add(record);
         }
@@ -125,35 +125,35 @@ public class EsSearch {
      * @return
      */
     public static EsResponse suggestSearch(EsRequest request) {
-        String keyword = PinYinHelper.getInstance().getAnalyzePinYin(request.getKeyword());
-        List<Map<String, Object>> suggest = getCompletionSuggest(request.getIndexname(), keyword,
-                request.getPn(), request.getPs());
-        return new EsResponse(request.getPs(), JsonUtil.toJson(suggest), 0);
+
+        List<Map<String, Object>> suggest = getCompletionSuggest(request.getIndexname(),
+                request.getSafeSuggestQuery());
+        return new EsResponse(request.getSafeSuggestQuery().getSize(), JsonUtil.toJson(suggest), 0);
     }
 
     /**
      * 
      * @param indices
-     * @param keyword
-     * @param from
-     * @param size
+     * @param suggestQuery
      * @return
      */
     @SuppressWarnings({ "unchecked" })
-    private static List<Map<String, Object>> getCompletionSuggest(String indices, String keyword,
-            int from, int size) {
+    private static List<Map<String, Object>> getCompletionSuggest(String indices,
+            SuggestQuery suggestQuery) {
         // 查询体
-        CompletionSuggestionBuilder suggestionsBuilder = new CompletionSuggestionBuilder("complete");
-        suggestionsBuilder.text(keyword);
-        suggestionsBuilder.field("SUGGEST");
-        suggestionsBuilder.size(size);
+        CompletionSuggestionFuzzyBuilder suggestionsBuilder = new CompletionSuggestionFuzzyBuilder(
+                suggestQuery.getSuggestname());
+        suggestionsBuilder.setFuzziness(Fuzziness.AUTO);
+        suggestionsBuilder.text(suggestQuery.getText());
+        suggestionsBuilder.field(suggestQuery.getField());
+        suggestionsBuilder.size(suggestQuery.getSize());
 
         SuggestRequestBuilder suggestRequestBuilder = ESClient.getClient()
                 .prepareSuggest(indices.split(",")).addSuggestion(suggestionsBuilder);
         SuggestResponse resp = suggestRequestBuilder.execute().actionGet();
         // 查询结果
         List<? extends Entry<? extends Option>> entries = (List<? extends Entry<? extends Option>>) resp
-                .getSuggest().getSuggestion("complete").getEntries();
+                .getSuggest().getSuggestion(suggestQuery.getSuggestname()).getEntries();
         if (entries == null) {
             return Lists.newArrayList();
         }
