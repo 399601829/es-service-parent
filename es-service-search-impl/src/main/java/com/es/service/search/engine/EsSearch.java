@@ -132,6 +132,7 @@ public class EsSearch {
     }
 
     /**
+     * 无奈es的版本太低了，无法在建议器中做过滤操作（笔者es版本1.1），在更高版本的es中可以通过Context Suggester做过滤
      * 
      * @param indices
      * @param suggestQuery
