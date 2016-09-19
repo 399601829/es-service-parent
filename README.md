@@ -15,4 +15,4 @@
  
 
 # 后台演示
-![Alt 演示效果](/es-service-doc/doc/demo/kuai.gif "演示效果") 
+![Alt 演示效果](/es-service-doc/doc/demo/man.gif "演示效果") 
