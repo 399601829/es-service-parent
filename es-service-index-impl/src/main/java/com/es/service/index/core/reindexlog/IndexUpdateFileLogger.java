@@ -127,7 +127,7 @@ public class IndexUpdateFileLogger implements IndexUpdateLogger {
             indexInfo.put(KEY_LAST_INDEX_NAME, indexName);
             indexInfo.store(out, null);
 
-            log.error("record index update log!.indexName:{},indexTime:{}", indexName, indexName);
+            log.info("record index update log!.indexName:{},indexTime:{}", indexName, indexName);
         } catch (IOException e) {
             e.printStackTrace();
             log.error("record index update log error!.indexName:{},indexTime:{}", indexName,

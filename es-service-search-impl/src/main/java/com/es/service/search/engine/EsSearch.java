@@ -143,7 +143,7 @@ public class EsSearch {
         // 查询体
         CompletionSuggestionFuzzyBuilder suggestionsBuilder = new CompletionSuggestionFuzzyBuilder(
                 suggestQuery.getSuggestname());
-        suggestionsBuilder.setFuzziness(Fuzziness.AUTO);
+        suggestionsBuilder.setFuzziness(Fuzziness.fromEdits(suggestQuery.getFuzziness()));
         suggestionsBuilder.text(suggestQuery.getText());
         suggestionsBuilder.field(suggestQuery.getField());
         suggestionsBuilder.size(suggestQuery.getSize());
@@ -168,6 +168,7 @@ public class EsSearch {
 
         // 调试模式
         if (Constants.isDebug) {
+            logger.info(suggestRequestBuilder.toString());
             logger.info(suggestionsBuilder.toString());
             logger.info(JsonUtil.toJson(result));
         }

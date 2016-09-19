@@ -7,13 +7,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * 
  * 自动补全建议器
  * 
  * @author hailin0@yeah.net
  * @createDate 2016年9月18日
- *
+ * 
  */
 public class CompletionSuggest implements Serializable {
 
@@ -47,7 +50,7 @@ public class CompletionSuggest implements Serializable {
      * 
      * @author hailin0@yeah.net
      * @createDate 2016年9月18日
-     *
+     * 
      */
     public static class SuggestBuilder {
 
@@ -55,9 +58,11 @@ public class CompletionSuggest implements Serializable {
 
         private String output;
 
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         private Map<String, Object> payload;
 
-        private float weight = 1;
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+        private int weight;
 
         /**
          * @param output
@@ -130,14 +135,14 @@ public class CompletionSuggest implements Serializable {
         /**
          * @return the weight
          */
-        public float getWeight() {
+        public int getWeight() {
             return weight;
         }
 
         /**
          * @param weight the weight to set
          */
-        public void setWeight(float weight) {
+        public void setWeight(int weight) {
             this.weight = weight;
         }
 
@@ -149,7 +154,7 @@ public class CompletionSuggest implements Serializable {
      * 
      * @author hailin0@yeah.net
      * @createDate 2016年9月18日
-     *
+     * 
      */
     public static class SuggestQuery implements Serializable {
 
@@ -170,13 +175,15 @@ public class CompletionSuggest implements Serializable {
 
         private String sort = "score";
 
-        private Map<String, Object> fuzzy;
+        /**
+         * 模糊字符参数
+         */
+        private int fuzziness = 0;
 
         /**
          * 
          */
         public SuggestQuery() {
-            this(null);
         }
 
         /**
@@ -184,18 +191,6 @@ public class CompletionSuggest implements Serializable {
          */
         public SuggestQuery(String text) {
             this.text = text;
-            this.fuzzy = new HashMap<String, Object>();
-            fuzzy.put("edit_distance", 2);
-        }
-
-        /**
-         * 构建建议器的模糊参数
-         * 
-         * @param edit_distance
-         */
-        public void buildFuzzy(int edit_distance) {
-            this.fuzzy = new HashMap<String, Object>();
-            fuzzy.put("edit_distance", edit_distance);
         }
 
         /**
@@ -241,17 +236,17 @@ public class CompletionSuggest implements Serializable {
         }
 
         /**
-         * @return the fuzzy
+         * @return the fuzziness
          */
-        public Map<String, Object> getFuzzy() {
-            return fuzzy;
+        public int getFuzziness() {
+            return fuzziness;
         }
 
         /**
-         * @param fuzzy the fuzzy to set
+         * @param fuzziness the fuzziness to set
          */
-        public void setFuzzy(Map<String, Object> fuzzy) {
-            this.fuzzy = fuzzy;
+        public void setFuzziness(int fuzziness) {
+            this.fuzziness = fuzziness;
         }
 
         /**

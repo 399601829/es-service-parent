@@ -3,7 +3,6 @@ package com.es.service.index.bean;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,7 +10,6 @@ import com.es.service.common.util.CompletionSuggest;
 import com.es.service.common.util.CompletionSuggest.SuggestBuilder;
 import com.es.service.common.util.PinYinHelper;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Sets;
 
 /**
  * 
@@ -397,7 +395,6 @@ public class ResourcesTO extends BaseTO {
         payload.put("NAME", getName());
 
         SuggestBuilder builder = new SuggestBuilder(name, payload);
-        builder.setWeight(hot);
 
         this.suggest = builder;
     }

@@ -94,7 +94,7 @@ public class EsQueryBuilder {
             srb.setQuery(boolQ);
             return boolQ;
         }
-        String boost_mode = request.getSafeExtend().get("BOOST_MODE");
+        String boost_mode = request.getSafeExtend().get(Constants.BOOST_MODE_KEY);
         if (StringUtils.isBlank(boost_mode)) {
             boost_mode = Constants.boost_mode;
         }
