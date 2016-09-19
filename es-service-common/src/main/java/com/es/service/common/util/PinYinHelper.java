@@ -11,15 +11,9 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequest;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse.AnalyzeToken;
-import org.elasticsearch.common.collect.Lists;
 import org.elasticsearch.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.es.service.common.client.ESClient;
 
 /**
  * 汉语拼音处理，中文字符转拼音
@@ -33,52 +27,15 @@ public class PinYinHelper {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * 
-     */
-    private static volatile PinYinHelper handler;
-
-    /**
      * pinyin配置
      */
-    private HanyuPinyinOutputFormat format;
+    private static HanyuPinyinOutputFormat format;
 
-    private PinYinHelper() {
+    static {
         format = new HanyuPinyinOutputFormat();
         format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
         format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
         format.setVCharType(HanyuPinyinVCharType.WITH_U_UNICODE);
-    }
-
-    /**
-     * 单例
-     * 
-     * @return
-     */
-    public static PinYinHelper getInstance() {
-        if (handler == null) {
-            synchronized (PinYinHelper.class) {
-                if (handler == null) {
-                    handler = new PinYinHelper();
-                }
-            }
-        }
-        return handler;
-    }
-
-    /**
-     * 分词
-     * 
-     * @param str
-     * @return
-     */
-    public List<String> analyze(String str) {
-        AnalyzeRequest request = new AnalyzeRequest(str).analyzer("ik").index("test");
-        AnalyzeResponse ar = ESClient.getClient().admin().indices().analyze(request).actionGet();
-        List<String> analyzeTokens = Lists.newArrayList();
-        for (AnalyzeToken at : ar.getTokens()) {
-            analyzeTokens.add(at.getTerm());
-        }
-        return analyzeTokens;
     }
 
     /**
@@ -87,7 +44,7 @@ public class PinYinHelper {
      * @param strs
      * @return
      */
-    public String getAnalyzePinYin(String strs) {
+    public static String getAnalyzePinYin(String strs) {
         Set<String> set = getPinYin_Index(strs);
         return StringUtils.join(set, ",");
     }
@@ -98,7 +55,7 @@ public class PinYinHelper {
      * @param strs
      * @return
      */
-    public String getAnalyzePinYinPrefix(String strs) {
+    public static String getAnalyzePinYinPrefix(String strs) {
         Set<String> set = getPinYinPrefix_Index(strs);
         return StringUtils.join(set, ",");
     }
@@ -109,9 +66,9 @@ public class PinYinHelper {
      * @param word
      * @return
      */
-    public Set<String> getPinYin_Index(String word) {
+    public static Set<String> getPinYin_Index(String word) {
         Set<String> results = Sets.newHashSet();
-        List<String> words = analyze(word);
+        List<String> words = AnalyzeHelper.analyze(word);
         if (!words.contains(word)) {
             words.add(word);
         }
@@ -132,9 +89,9 @@ public class PinYinHelper {
      * @param word
      * @return
      */
-    public Set<String> getPinYinPrefix_Index(String word) {
+    public static Set<String> getPinYinPrefix_Index(String word) {
         Set<String> results = Sets.newHashSet();
-        List<String> words = analyze(word);
+        List<String> words = AnalyzeHelper.analyze(word);
         if (!words.contains(word)) {
             words.add(word);
         }
@@ -155,7 +112,7 @@ public class PinYinHelper {
      * @param word
      * @return
      */
-    public String getPinYinPrefix(String word) {
+    public static String getPinYinPrefix(String word) {
         char[] ch = word.trim().toCharArray();
         StringBuilder rs = new StringBuilder();
         try {
@@ -189,7 +146,7 @@ public class PinYinHelper {
      * @param word
      * @return
      */
-    public String getPinYin(String word) {
+    public static String getPinYin(String word) {
         char[] ch = word.trim().toCharArray();
         StringBuilder rs = new StringBuilder();
         try {
@@ -223,8 +180,7 @@ public class PinYinHelper {
 
     public static void main(String[] args) throws BadHanyuPinyinOutputFormatCombination {
         String s1 = "大话西游";
-        String s2 = getInstance().getAnalyzePinYin(s1) + ","
-                + getInstance().getAnalyzePinYinPrefix(s1);
+        String s2 = getAnalyzePinYin(s1) + "," + getAnalyzePinYinPrefix(s1);
         System.out.println(s1);
         System.out.println(s2);
     }

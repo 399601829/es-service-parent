@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequest;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
-import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
@@ -22,9 +19,8 @@ import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder;
 
-import com.es.service.common.client.ESClient;
 import com.es.service.common.conf.Constants;
-import com.es.service.common.type.IndexType;
+import com.es.service.common.util.AnalyzeHelper;
 import com.es.service.search.to.Condition;
 import com.es.service.search.to.EsFilterScript;
 import com.es.service.search.to.EsRequest;
@@ -33,7 +29,6 @@ import com.es.service.search.to.SearchCondition;
 import com.es.service.search.type.ConditionType;
 import com.es.service.search.util.KeyWordUtil;
 import com.google.common.collect.Lists;
-import com.google.common.primitives.Booleans;
 
 /**
  * 构建查询体
@@ -400,29 +395,11 @@ public class EsQueryBuilder {
      */
     private boolean requestAnalyzeToken(List<Condition> conditions) {
         if (conditions != null) {
-            IndexType indexType = IndexType.getIndexType(indexName);
-            String realIndex = "";
-            IndicesAdminClient adminClient = ESClient.getClient().admin().indices();
-            if (adminClient.prepareExists(indexType.index_type_1()).execute().actionGet()
-                    .isExists()) {
-                realIndex = indexType.index_type_1();
-            }
-            if (adminClient.prepareExists(indexType.index_type_2()).execute().actionGet()
-                    .isExists()) {
-                realIndex = indexType.index_type_2();
-            }
             List<Condition> copys = Lists.newArrayList(conditions);
             for (Iterator<Condition> iterator = copys.iterator(); iterator.hasNext();) {
                 Condition condition = (Condition) iterator.next();
                 if (condition != null) {
-                    AnalyzeResponse ar = ESClient
-                            .getClient()
-                            .admin()
-                            .indices()
-                            .analyze(
-                                    new AnalyzeRequest(condition.getValue()).analyzer("ik").index(
-                                            realIndex)).actionGet();
-                    if (ar == null || ar.getTokens() == null || ar.getTokens().size() < 1) {
+                    if (AnalyzeHelper.analyze(condition.getValue()).isEmpty()) {
                         conditions.remove(condition);
                     }
                 }

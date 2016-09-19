@@ -10,9 +10,9 @@ import com.es.service.common.type.IndexType;
 import com.es.service.common.util.JsonUtil;
 import com.es.service.control.service.SearchService;
 import com.es.service.search.SearchRemoteService;
+import com.es.service.search.to.EsFilterScript;
 import com.es.service.search.to.EsRequest;
 import com.es.service.search.to.EsResponse;
-import com.es.service.search.to.EsFilterScript;
 import com.es.service.search.to.ScoreScript;
 import com.es.service.search.to.SearchCondition;
 import com.es.service.search.type.ConditionType;
@@ -44,13 +44,13 @@ public class SearchServiceImpl implements SearchService {
         match.add("NAME_QUERY", keyWord, true);
 
         SearchCondition fuzz = new SearchCondition(SearchType.FUZZ, ConditionType.OR);
-        fuzz.add("NAME_QUERY", keyWord,true);
+        fuzz.add("NAME_QUERY", keyWord, true);
         fuzz.add("ENNAME_QUERY", keyWord);
 
         SearchCondition query_string = new SearchCondition(SearchType.QUERY_STRING,
                 ConditionType.OR);
         query_string.add("NAME_QUERY", keyWord);
-        query_string.add("NAME_PINYIN_QUERY", keyWord,PinyinType.PINYIN_ALL);
+        query_string.add("NAME_PINYIN_QUERY", keyWord, PinyinType.PINYIN_ALL);
 
         EsRequest request = new EsRequest(IndexType.RESOURCES, 1, 10);
         request.orSearchCondition(term);
@@ -75,8 +75,14 @@ public class SearchServiceImpl implements SearchService {
 
         EsResponse response = remoteService.search(request, 10, TimeUnit.SECONDS);
 
-
         return JsonUtil.toJson(response);
     }
 
+    @Override
+    public String suggest(String indexName, String keyWord) {
+        EsRequest request = new EsRequest(IndexType.RESOURCES);
+        request.getSafeSuggestQuery().setText(keyWord);
+        EsResponse immediateSearch = remoteService.suggestSearch(request);
+        return immediateSearch.getJsonObject();
+    }
 }

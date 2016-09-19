@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.es.service.common.util.CompletionSuggest;
 import com.es.service.common.util.CompletionSuggest.SuggestBuilder;
 import com.es.service.common.util.PinYinHelper;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -124,7 +123,7 @@ public class ResourcesTO extends BaseTO {
     /**
      * 建议器-自动补缺
      */
-    @JsonProperty(CompletionSuggest.key)
+    @JsonProperty(SuggestBuilder.key)
     private SuggestBuilder suggest;
 
     /**
@@ -176,7 +175,7 @@ public class ResourcesTO extends BaseTO {
      */
     public String getName_pinyin() {
         if (StringUtils.isBlank(name_pinyin)) {
-            setName_pinyin(PinYinHelper.getInstance().getPinYin(name));
+            setName_pinyin(PinYinHelper.getPinYin(name));
         }
         return name_pinyin;
     }
@@ -193,7 +192,7 @@ public class ResourcesTO extends BaseTO {
      */
     public String getName_prefix_pinyin() {
         if (StringUtils.isBlank(name_prefix_pinyin)) {
-            setName_prefix_pinyin(PinYinHelper.getInstance().getPinYinPrefix(name));
+            setName_prefix_pinyin(PinYinHelper.getPinYinPrefix(name));
         }
         return name_prefix_pinyin;
     }
@@ -212,15 +211,14 @@ public class ResourcesTO extends BaseTO {
         if (StringUtils.isBlank(name_pinyin_query)) {
             StringBuilder all = new StringBuilder();
             if (StringUtils.isNotBlank(name)) {
-                all.append(PinYinHelper.getInstance().getAnalyzePinYin(name)).append(",");
-                all.append(PinYinHelper.getInstance().getAnalyzePinYinPrefix(name)).append(",");
+                all.append(PinYinHelper.getAnalyzePinYin(name)).append(",");
+                all.append(PinYinHelper.getAnalyzePinYinPrefix(name)).append(",");
             }
             if (StringUtils.isNotBlank(alias)) {
                 String[] str = alias.split(",");
                 for (int i = 0; i < str.length; i++) {
-                    all.append(PinYinHelper.getInstance().getAnalyzePinYin(str[i])).append(",");
-                    all.append(PinYinHelper.getInstance().getAnalyzePinYinPrefix(str[i])).append(
-                            ",");
+                    all.append(PinYinHelper.getAnalyzePinYin(str[i])).append(",");
+                    all.append(PinYinHelper.getAnalyzePinYinPrefix(str[i])).append(",");
                 }
             }
             setName_pinyin_query(all.toString());
@@ -365,7 +363,7 @@ public class ResourcesTO extends BaseTO {
      * @return the suggest
      */
     public SuggestBuilder getSuggest() {
-        if(suggest == null){
+        if (suggest == null) {
             setSuggest();
         }
         return suggest;

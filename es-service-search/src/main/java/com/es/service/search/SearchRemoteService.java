@@ -26,7 +26,7 @@ public interface SearchRemoteService {
     EsResponse search(EsRequest request, int timeout, TimeUnit timeUnit);
 
     /**
-     * 建议器搜索，返回固定的建议内容
+     * 前缀建议器搜索，返回固定的建议内容
      * 
      * @param request
      * @return

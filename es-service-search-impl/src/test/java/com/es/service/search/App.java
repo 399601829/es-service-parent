@@ -95,7 +95,7 @@ public class App {
     public void test2() {
 
         EsRequest request = new EsRequest(IndexType.RESOURCES);
-        request.getSafeSuggestQuery().setText("wds");
+        request.getSafeSuggestQuery().setText("我");
         
         EsResponse immediateSearch = EsSearch.suggestSearch(request);
         System.out.println(immediateSearch);

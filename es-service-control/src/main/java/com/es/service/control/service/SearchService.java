@@ -11,6 +11,7 @@ package com.es.service.control.service;
 public interface SearchService {
 
     /**
+     * 搜索
      * 
      * @param indexName
      * @param typeName
@@ -18,4 +19,13 @@ public interface SearchService {
      * @return
      */
     String search(String indexName, String typeName, String keyWord);
+
+    /**
+     * 建议器
+     * 
+     * @param indexName
+     * @param keyWord
+     * @return
+     */
+    String suggest(String indexName, String keyWord);
 }

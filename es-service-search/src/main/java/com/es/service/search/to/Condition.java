@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.es.service.common.util.PinYinHelper;
 import com.es.service.search.type.PinyinType;
-import com.es.service.search.util.KeyWordUtil;
 
 /**
  * 
@@ -116,14 +115,14 @@ public class Condition implements Serializable {
             Set<String> words = new HashSet<String>();
             switch (pattern) {
             case PINYIN:
-                words.addAll(PinYinHelper.getInstance().getPinYin_Index(value));
+                words.addAll(PinYinHelper.getPinYin_Index(value));
                 break;
             case PINYIN_PREFIX:
-                words.addAll(PinYinHelper.getInstance().getPinYinPrefix_Index(value));
+                words.addAll(PinYinHelper.getPinYinPrefix_Index(value));
                 break;
             case PINYIN_ALL:
-                words.addAll(PinYinHelper.getInstance().getPinYin_Index(value));
-                words.addAll(PinYinHelper.getInstance().getPinYinPrefix_Index(value));
+                words.addAll(PinYinHelper.getPinYin_Index(value));
+                words.addAll(PinYinHelper.getPinYinPrefix_Index(value));
                 break;
             default:
                 break;

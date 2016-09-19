@@ -2,13 +2,12 @@ package com.es.service.common.util;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * 
@@ -54,6 +53,9 @@ public class CompletionSuggest implements Serializable {
      */
     public static class SuggestBuilder {
 
+        @JsonIgnore
+        public static final String key = CompletionSuggest.key;
+
         private Set<String> input;
 
         private String output;
@@ -75,8 +77,8 @@ public class CompletionSuggest implements Serializable {
 
             this.input = new HashSet<String>();
             this.input.add(output);
-            this.input.add(PinYinHelper.getInstance().getPinYin(output));
-            this.input.add(PinYinHelper.getInstance().getPinYinPrefix(output));
+            this.input.add(PinYinHelper.getPinYin(output));
+            this.input.add(PinYinHelper.getPinYinPrefix(output));
         }
 
         /**
@@ -163,9 +165,9 @@ public class CompletionSuggest implements Serializable {
          */
         private static final long serialVersionUID = 4387816230333713773L;
 
-        private static final String suggestName = CompletionSuggest.type;
+        public static final String suggestName = CompletionSuggest.type;
 
-        private static final String type = CompletionSuggest.type;
+        public static final String type = CompletionSuggest.type;
 
         private String text;
 
@@ -176,9 +178,9 @@ public class CompletionSuggest implements Serializable {
         private String sort = "score";
 
         /**
-         * 模糊字符参数
+         * 模糊字符参数 0、1、2、AUTO
          */
-        private int fuzziness = 0;
+        private Object fuzziness = "AUTO";
 
         /**
          * 
@@ -217,8 +219,9 @@ public class CompletionSuggest implements Serializable {
         /**
          * @param size the size to set
          */
-        public void setSize(int size) {
+        public SuggestQuery setSize(int size) {
             this.size = size;
+            return this;
         }
 
         /**
@@ -238,29 +241,29 @@ public class CompletionSuggest implements Serializable {
         /**
          * @return the fuzziness
          */
-        public int getFuzziness() {
+        public Object getFuzziness() {
+            if ("AUTO".equals(fuzziness.toString())) {
+                int len = text == null ? 5 : text.codePointCount(0, text.length());
+                if (len <= 2) {
+                    return 0;
+                } else if (len > 5) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+            }
             return fuzziness;
         }
 
         /**
          * @param fuzziness the fuzziness to set
          */
-        public void setFuzziness(int fuzziness) {
+        public SuggestQuery setFuzziness(int fuzziness) {
+            if (fuzziness < 0 || fuzziness > 2) {
+                throw new RuntimeException("fuzziness 范围在0-2为有效！");
+            }
             this.fuzziness = fuzziness;
-        }
-
-        /**
-         * @return the suggestname
-         */
-        public static String getSuggestname() {
-            return suggestName;
-        }
-
-        /**
-         * @return the type
-         */
-        public static String getType() {
-            return type;
+            return this;
         }
 
         /**
@@ -273,8 +276,9 @@ public class CompletionSuggest implements Serializable {
         /**
          * @param text the text to set
          */
-        public void setText(String text) {
+        public SuggestQuery setText(String text) {
             this.text = text;
+            return this;
         }
 
     }

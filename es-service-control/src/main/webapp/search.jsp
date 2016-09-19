@@ -17,7 +17,7 @@
 	}
 
 	//使用post方式发送
-	function doRequestUsingPost() {
+	function doSearch() {
 		document.getElementById("serverResponse").innerHTML = "加载中。。。";
 		
 		createXMLHttpRequest();
@@ -25,6 +25,23 @@
 		var typeName = document.getElementById("typeName").value;
 		var keyWord = document.getElementById("keyWord").value;
 		var url = "search.json?indexName=" + indexName + "&typeName=" + typeName + "&keyWord="
+				+ keyWord;
+		xmlHttp.open("POST", url, true);
+		xmlHttp.onreadystatechange = handleStateChange;
+		xmlHttp.setRequestHeader("Content-Type",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		xmlHttp.send(null);
+	}
+	
+	//使用post方式发送
+	function doSuggest() {
+		document.getElementById("serverResponse").innerHTML = "加载中。。。";
+		
+		createXMLHttpRequest();
+		var indexName = document.getElementById("indexName").value;
+		var typeName = document.getElementById("typeName").value;
+		var keyWord = document.getElementById("keyWord").value;
+		var url = "suggest.json?indexName=" + indexName + "&keyWord="
 				+ keyWord;
 		xmlHttp.open("POST", url, true);
 		xmlHttp.onreadystatechange = handleStateChange;
@@ -86,7 +103,7 @@
 				<td>输入搜索关键字：</td>
 				<td>
 					<br /> 
-					<input name="keyWord" id="keyWord" value="我的世界" size="50" style="height: 30px" />
+					<input name="keyWord" id="keyWord" oninput="doSuggest();" value="我的世界" size="50" style="height: 30px" />
 					<p style="color: red;">
 						注意:此内容可以用空格符号分割批量操作。<br />例如:词条1 词条2 词条3
 						<br /><br />支持的搜索模式示例:
@@ -106,7 +123,7 @@
 			<tr align="left">
 				<td>提交按钮：</td>
 				<td><input type="button" name="Submit2" value="搜索"
-					onclick="doRequestUsingPost();" /></td>
+					onclick="doSearch();" /></td>
 			</tr>
 			<tr>
 				<td colspan="2" align="center">

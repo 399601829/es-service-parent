@@ -27,14 +27,40 @@ public class SearchController {
     @Resource
     private SearchService searchService;
 
+    /**
+     * 搜索
+     * 
+     * @param indexName
+     * @param typeName
+     * @param keyWord
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/search")
     public String search(String indexName, String typeName, String keyWord) {
         try {
-            keyWord = new String(keyWord.getBytes("iso8859-1"),"utf-8");
+            keyWord = new String(keyWord.getBytes("iso8859-1"), "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return searchService.search(indexName, typeName, keyWord);
+    }
+
+    /**
+     * 前缀建议
+     * 
+     * @param indexName
+     * @param keyWord
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/suggest")
+    public String suggest(String indexName, String keyWord) {
+        try {
+            keyWord = new String(keyWord.getBytes("iso8859-1"), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return searchService.suggest(indexName, keyWord);
     }
 }

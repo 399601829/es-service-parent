@@ -142,8 +142,8 @@ public class EsSearch {
             SuggestQuery suggestQuery) {
         // 查询体
         CompletionSuggestionFuzzyBuilder suggestionsBuilder = new CompletionSuggestionFuzzyBuilder(
-                suggestQuery.getSuggestname());
-        suggestionsBuilder.setFuzziness(Fuzziness.fromEdits(suggestQuery.getFuzziness()));
+                suggestQuery.suggestName);
+        suggestionsBuilder.setFuzziness(Fuzziness.build(suggestQuery.getFuzziness()));
         suggestionsBuilder.text(suggestQuery.getText());
         suggestionsBuilder.field(suggestQuery.getField());
         suggestionsBuilder.size(suggestQuery.getSize());
@@ -153,7 +153,7 @@ public class EsSearch {
         SuggestResponse resp = suggestRequestBuilder.execute().actionGet();
         // 查询结果
         List<? extends Entry<? extends Option>> entries = (List<? extends Entry<? extends Option>>) resp
-                .getSuggest().getSuggestion(suggestQuery.getSuggestname()).getEntries();
+                .getSuggest().getSuggestion(suggestQuery.suggestName).getEntries();
         if (entries == null) {
             return Lists.newArrayList();
         }
