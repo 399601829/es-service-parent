@@ -76,9 +76,9 @@ public class CompletionSuggest implements Serializable {
             this.payload = payload;
 
             this.input = new HashSet<String>();
-            this.input.add(output);
-            this.input.add(PinYinHelper.getPinYin(output));
-            this.input.add(PinYinHelper.getPinYinPrefix(output));
+            addInput(output);
+            addInput(PinYinHelper.getPinYin(output));
+            addInput(PinYinHelper.getPinYinPrefix(output));
         }
 
         /**
@@ -87,9 +87,9 @@ public class CompletionSuggest implements Serializable {
          * @param word
          * @return
          */
-        public SuggestBuilder addInput(String... word) {
-            input.addAll(Arrays.asList(word));
-            return this;
+        public SuggestBuilder addInput(String word) {
+            input.add(word.contains(" ")? word.replaceAll(" ", ""):word);
+            return this; 
         }
 
         /**
@@ -192,7 +192,7 @@ public class CompletionSuggest implements Serializable {
          * @param text
          */
         public SuggestQuery(String text) {
-            this.text = text;
+            this.text = text.contains(" ")? text.replaceAll(" ", ""):text;
         }
 
         /**
@@ -277,7 +277,7 @@ public class CompletionSuggest implements Serializable {
          * @param text the text to set
          */
         public SuggestQuery setText(String text) {
-            this.text = text;
+            this.text = text.contains(" ")? text.replaceAll(" ", ""):text;
             return this;
         }
 

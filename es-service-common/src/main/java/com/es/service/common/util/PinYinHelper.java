@@ -179,9 +179,10 @@ public class PinYinHelper {
     }
 
     public static void main(String[] args) throws BadHanyuPinyinOutputFormatCombination {
-        String s1 = "大话西游";
-        String s2 = getAnalyzePinYin(s1) + "," + getAnalyzePinYinPrefix(s1);
-        System.out.println(s1);
-        System.out.println(s2);
+//        String s1 = "大话西游";
+//        String s2 = getAnalyzePinYin(s1) + "," + getAnalyzePinYinPrefix(s1);
+//        System.out.println(s1);
+//        System.out.println(s2);
+        System.out.println(getPinYin(" 我 的 世 界"));
     }
 }
