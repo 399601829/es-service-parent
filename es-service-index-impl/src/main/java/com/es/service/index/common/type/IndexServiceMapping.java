@@ -7,6 +7,7 @@ import com.es.service.index.core.IndexServiceSupport;
 import com.es.service.index.dao.mapper.Mapper;
 import com.es.service.index.dao.mapper.ResourcesMapper;
 import com.es.service.index.provider.ApplicationContextProvider;
+import com.es.service.index.service.IndexService;
 import com.es.service.index.service.ResourcesServiceImpl;
 
 /**
@@ -98,8 +99,8 @@ public enum IndexServiceMapping {
         return (Mapper<T>) ApplicationContextProvider.getBean(mapperCla);
     }
 
-    public IndexServiceSupport<BaseTO> getService() {
-        return (IndexServiceSupport<BaseTO>) ApplicationContextProvider.getBean(serviceCla);
+    public IndexService<BaseTO> getService() {
+        return (IndexService<BaseTO>) ApplicationContextProvider.getBean(serviceCla);
     }
 
     /**

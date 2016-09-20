@@ -8,7 +8,7 @@ import com.es.service.common.type.Event;
 import com.es.service.index.IndexRemoteService;
 import com.es.service.index.bean.BaseTO;
 import com.es.service.index.common.type.IndexServiceMapping;
-import com.es.service.index.core.IndexServiceSupport;
+import com.es.service.index.service.IndexService;
 
 /**
  * 
@@ -31,7 +31,7 @@ public class IndexRemoteServiceImpl implements IndexRemoteService {
     public <T> boolean updateIndex(Event<T> event) {
         IndexServiceMapping indexServiceMapping = IndexServiceMapping.getIndexServiceMapping(event
                 .getIndexType());
-        IndexServiceSupport<BaseTO> service = indexServiceMapping.getService();
+        IndexService<BaseTO> service = indexServiceMapping.getService();
         switch (event.getAction()) {
         case CREATE:
         case UPDATE:
@@ -41,7 +41,7 @@ public class IndexRemoteServiceImpl implements IndexRemoteService {
             } else if (event.getEventSource() instanceof BaseTO) {
                 BaseTO to = (BaseTO) event.getEventSource();
                 service.updateDoc(to);
-            }  else {
+            } else {
                 Object query = indexServiceMapping.getMapper().query(event.getEventSource());
                 service.updateDoc((BaseTO) query);
             }
@@ -50,11 +50,16 @@ public class IndexRemoteServiceImpl implements IndexRemoteService {
             String docId = String.valueOf(event.getEventSource());
             service.delDoc(docId);
             break;
+        case FULL_INDEX:
+            service.doFullIndex();
+            break;
+        case INCREAMENT_INDEX:
+            service.doIncreamentIndex();
+            break;
         default:
             break;
         }
         return true;
 
     }
-
 }

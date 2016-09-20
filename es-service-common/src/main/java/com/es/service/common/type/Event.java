@@ -56,7 +56,11 @@ public class Event<T> implements Serializable {
      *
      */
     public static enum Action {
-        CREATE("create"), UPDATE("update"), DELETE("delete");
+        CREATE("create"), 
+        UPDATE("update"), 
+        DELETE("delete"), 
+        FULL_INDEX("fullIndex"), 
+        INCREAMENT_INDEX("IncreamentIndex");
         /*
          * 事件动作
          */

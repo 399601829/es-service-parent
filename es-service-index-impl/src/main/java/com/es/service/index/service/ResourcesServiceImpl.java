@@ -1,5 +1,7 @@
 package com.es.service.index.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.es.service.common.type.IndexType;
@@ -16,7 +18,8 @@ import com.es.service.index.core.IndexServiceSupport;
  * 
  */
 @Service("resourcesService")
-public class ResourcesServiceImpl extends IndexServiceSupport<ResourcesTO> {
+public class ResourcesServiceImpl extends IndexServiceSupport<ResourcesTO> implements
+        IndexService<ResourcesTO> {
 
     @IndexUpdateLock(indexType = IndexType.RESOURCES, isFull = true)
     @Override
@@ -49,6 +52,12 @@ public class ResourcesServiceImpl extends IndexServiceSupport<ResourcesTO> {
     public void updateDoc(ResourcesTO to) {
         log.info("updateDoc start ...");
         super.updateDoc(to);
+    }
+
+    @Override
+    public void updateDoc(List<ResourcesTO> tos) {
+        log.info("updateDoc start ...");
+        super.updateDoc(tos);
     }
 
 }
