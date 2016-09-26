@@ -13,6 +13,7 @@
 # es-service-control
   后台服务web工程，提供在线的热更新词典管理（基于ik分词）、搜索查询页面等功能。
  
-
+# 同义词热更新插件
+<a href="https://github.com/hailin0/elasticsearch-analysis-dynamic-synonym">项目地址 elasticsearch-analysis-dynamic-synonym</a>
 # 后台演示
 ![Alt 演示效果](/es-service-doc/doc/demo/man.gif "演示效果") 
