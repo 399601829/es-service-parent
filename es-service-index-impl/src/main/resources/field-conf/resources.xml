@@ -14,19 +14,19 @@
    <field name="type" type="int" indexed="true" stored="true"/>
    
    <field name="name" type="string" indexed="true" stored="true"  copyto="name_query"/>
-   <field name="name_query" type="string" indexed="true" stored="true" isAnalyzer="true" />
+   <field name="name_query" type="string" indexed="true" stored="true" isAnalyzer="true" indexAnalyzer="ik_max_word" searchAnalyzer="ik_smart" />
    
    <field name="enName" type="string" indexed="true" stored="true"  copyto="enName_query"/>
-   <field name="enName_query" type="string" indexed="true" stored="true"  isAnalyzer="true" analyzer="english" />
+   <field name="enName_query" type="string" indexed="true" stored="true"  isAnalyzer="true" indexAnalyzer="english" />
    
    <field name="name_pinyin" type="string" indexed="true" stored="true"  />
    <field name="name_prefix_pinyin" type="string" indexed="true" stored="true"  />
-   <field name="name_pinyin_query" type="string" indexed="true" stored="true"  isAnalyzer="true" analyzer="edge_ngram" />
+   <field name="name_pinyin_query" type="string" indexed="true" stored="true"  isAnalyzer="true" indexAnalyzer="edge_ngram" />
    
    <field name="alias" type="string" indexed="true" stored="true" isAnalyzer="true" copyto="name_query" weight="0.9"/>
 
    <field name="tags" type="string" indexed="true" stored="true" isAnalyzer="true" weight="0.8"/>
-   <field name="typos" type="string" indexed="true" stored="true" isAnalyzer="true" analyzer="keyword_pattern" />
+   <field name="typos" type="string" indexed="true" stored="true" isAnalyzer="true" indexAnalyzer="keyword_pattern" />
    <!-- <field name="description" type="string" indexed="true" stored="true" isAnalyzer="true" /> -->
 
    <field name="hot" type="float" indexed="true" stored="true" />

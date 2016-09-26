@@ -35,7 +35,7 @@ public class LoadWordAction extends HttpServlet {
     /**
      * 页面post方法
      * <p>
-     * Last-Modified,ETags两个http头的处理，以及按照ik规定的格式返回扩展词汇(词汇以\n分割)
+     * Last-Modified,ETag两个http头的处理，以及按照ik规定的格式返回扩展词汇(词汇以\n分割)
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -45,20 +45,25 @@ public class LoadWordAction extends HttpServlet {
         String tag = req.getParameter("tag");
         if (StringUtils.isBlank(tag)) {
             String uri = req.getRequestURI();
-            tag = uri.endsWith(ExtWordProcessor.remote_ext_dict_filename) ? ExtWordProcessor.remote_ext_dict_filename
-                    : ExtWordProcessor.remote_ext_stopwords_filename;
+            if(uri.endsWith(ExtWordProcessor.remote_ext_dict_filename)){
+                tag = ExtWordProcessor.remote_ext_dict_filename;
+            }else if(uri.endsWith(ExtWordProcessor.remote_ext_stopwords_filename)){
+                tag = ExtWordProcessor.remote_ext_stopwords_filename;
+            }else if(uri.endsWith(ExtWordProcessor.remote_ext_synonym_filename)){
+                tag = ExtWordProcessor.remote_ext_synonym_filename;
+            }
         }
 
         String txt = "";
         try {
             resp.setHeader("Last-Modified", ExtWordProcessor.getLastModified(tag) + "");
-            resp.setHeader("ETags", ExtWordProcessor.getLastModified(tag) + "");
+            resp.setHeader("ETag", ExtWordProcessor.getLastModified(tag) + "");
             cache.put(tag, ExtWordProcessor.getLastModified(tag));
             txt = ExtWordProcessor.read(tag);
         } catch (Exception e) {
             // 出错的情况 用上一次内存中的值
             resp.setHeader("Last-Modified", cache.get(tag) + "");
-            resp.setHeader("ETags", cache.get(tag) + "");
+            resp.setHeader("ETag", cache.get(tag) + "");
         }
         resp.getWriter().write(txt);
         resp.getWriter().flush();

@@ -33,13 +33,10 @@ public class Filed {
     private boolean isAnalyzer = false;
 
     // 索引分词器
-    private boolean indexAnalyzer;
+    private String indexAnalyzer = "ik_max_word";
 
-    // 搜索分词器
-    private boolean searchAnalyzer;
-
-    // 分词方式
-    private String analyzer = "ik_max_word";
+    // 搜索分词器-默认使用索引分词器
+    private String searchAnalyzer;
 
     // 是否默认搜索(加入_all字段)
     private boolean isdefaultsearch = false;
@@ -176,43 +173,29 @@ public class Filed {
     /**
      * @return the indexAnalyzer
      */
-    public boolean isIndexAnalyzer() {
+    public String getIndexAnalyzer() {
         return indexAnalyzer;
     }
 
     /**
      * @param indexAnalyzer the indexAnalyzer to set
      */
-    public void setIndexAnalyzer(boolean indexAnalyzer) {
+    public void setIndexAnalyzer(String indexAnalyzer) {
         this.indexAnalyzer = indexAnalyzer;
     }
 
     /**
      * @return the searchAnalyzer
      */
-    public boolean isSearchAnalyzer() {
+    public String getSearchAnalyzer() {
         return searchAnalyzer;
     }
 
     /**
      * @param searchAnalyzer the searchAnalyzer to set
      */
-    public void setSearchAnalyzer(boolean searchAnalyzer) {
+    public void setSearchAnalyzer(String searchAnalyzer) {
         this.searchAnalyzer = searchAnalyzer;
-    }
-
-    /**
-     * @return the analyzer
-     */
-    public String getAnalyzer() {
-        return analyzer;
-    }
-
-    /**
-     * @param analyzer the analyzer to set
-     */
-    public void setAnalyzer(String analyzer) {
-        this.analyzer = analyzer;
     }
 
     /**

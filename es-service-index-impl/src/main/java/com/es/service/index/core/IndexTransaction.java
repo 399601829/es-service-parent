@@ -475,13 +475,13 @@ public class IndexTransaction {
                     if (!filed.isAnalyzer()) {
                         contentBuilder.field("index", "not_analyzed");
                     } else {
-                        if (filed.isIndexAnalyzer()) {
-                            contentBuilder.field("indexAnalyzer", filed.getAnalyzer()).field(
-                                    "searchAnalyzer", filed.getAnalyzer());
-                        } else {
-                            contentBuilder.field("index", "not_analyzed").field("searchAnalyzer",
-                                    filed.getAnalyzer());
+                        String indexAnalyzer = filed.getIndexAnalyzer();
+                        String searchAnalyzer = filed.getSearchAnalyzer();
+                        if (StringUtils.isBlank(searchAnalyzer)) {
+                            searchAnalyzer = indexAnalyzer;
                         }
+                        contentBuilder.field("indexAnalyzer", indexAnalyzer).field(
+                                "searchAnalyzer", searchAnalyzer);
                     }
                 }
                 contentBuilder.endObject();

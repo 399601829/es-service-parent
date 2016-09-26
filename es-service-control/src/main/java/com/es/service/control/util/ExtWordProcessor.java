@@ -29,6 +29,8 @@ public class ExtWordProcessor {
     
     public static String remote_ext_stopwords_filename = "remote_ext_stopwords.txt";
     
+    public static String remote_ext_synonym_filename = "remote_ext_synonym.txt";
+    
     private String word_separator = "-";
     
     // 扩展词
@@ -36,6 +38,9 @@ public class ExtWordProcessor {
 
     // 停用词
     private File remote_ext_stopwords;
+    
+    // 同义词
+    private File remote_ext_synonym;
 
     // 缓存数据
     private HashMap<File, ArrayList<String>> cache = new HashMap<File, ArrayList<String>>();
@@ -87,6 +92,17 @@ public class ExtWordProcessor {
                 e.printStackTrace();
             }
         }
+        
+        // 初始化文件，不存在则创建
+        remote_ext_synonym = new File(Constants.es_index_info_dir
+                + "/"+remote_ext_synonym_filename);
+        if (!remote_ext_synonym.exists() || !remote_ext_synonym.isFile()) {
+            try {
+                remote_ext_synonym.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -118,6 +134,18 @@ public class ExtWordProcessor {
             }
         }
         cache.put(remote_ext_stopwords, ext_stopwords);
+        
+        ArrayList<String> ext_synonym = Lists.newArrayList();
+        content = readWordContent(remote_ext_synonym);
+        if (StringUtils.isNotBlank(content)) {
+            String[] words = content.split("\n");
+            for (String word : words) {
+                if (StringUtils.isNotBlank(word)) {
+                    ext_synonym.add(word);
+                }
+            }
+        }
+        cache.put(remote_ext_synonym, ext_synonym);
     }
 
     /**
@@ -140,6 +168,18 @@ public class ExtWordProcessor {
         // }
         // } while (list != null && list.size() > 0);
 
+        // startIndex = 0;
+        // do {
+        // list = DB.getDate(startIndex, endIndex);
+        // if (list != null && list.size() > 0) {
+        // long lastId = list.get(list.size() - 1).getId();
+        // for (Object o : list) {
+        // write(remote_ext_dict,o.getName());
+        // }
+        // startIndex = (int) lastId;
+        // }
+        // } while (list != null && list.size() > 0);
+        
         // startIndex = 0;
         // do {
         // list = DB.getDate(startIndex, endIndex);
@@ -258,6 +298,9 @@ public class ExtWordProcessor {
         }
         if (remote_ext_stopwords_filename.equals(tag)) {
             return remote_ext_stopwords;
+        }
+        if (remote_ext_synonym_filename.equals(tag)) {
+            return remote_ext_synonym;
         }
         return null;
     }

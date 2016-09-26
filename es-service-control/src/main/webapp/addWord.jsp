@@ -75,6 +75,7 @@
 				<td><select id="tag" name="tag">
 						<option value="remote_ext_dict.txt">扩展词-词典</option>
 						<option value="remote_ext_stopwords.txt">停用词-词典</option>
+						<option value="remote_ext_synonym.txt">同义词-词典</option>
 				</select></td>
 			</tr>
 			<tr align="left">
@@ -92,7 +93,7 @@
 			</tr>
 			<tr align="left">
 				<td>提交按钮：</td>
-				<td><input type="button" name="Submit2" value="POST"
+				<td><input type="button" name="Submit2" value="添加 and 显示"
 					onclick="doRequestUsingPost();" /></td>
 			</tr>
 			<tr>

@@ -42,6 +42,7 @@
 		<servlet-name>LoadWord</servlet-name>
 		<url-pattern>/LoadWord/remote_ext_dict.txt</url-pattern>
 		<url-pattern>/LoadWord/remote_ext_stopwords.txt</url-pattern>
+		<url-pattern>/LoadWord/remote_ext_synonym.txt</url-pattern>
 	</servlet-mapping>
 
 	<!-- Spring 容器启动监听器 -->

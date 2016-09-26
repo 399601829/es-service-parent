@@ -144,10 +144,14 @@ public class FieldXMLParser {
                         .attributeValue("isAnalyzer").equals("true"));
                 // 确定分词
                 if (filed.isAnalyzer()) {
-                    filed.setAnalyzer(element.attributeValue("analyzer") == null ? "ik_max_word"
-                            : element.attributeValue("analyzer"));
-                    filed.setIndexAnalyzer(element.attributeValue("indexAnalyzer") == null ? true
-                            : element.attributeValue("indexAnalyzer").equals("true"));
+                    String indexAnalyzer = element.attributeValue("indexAnalyzer");
+                    String searchAnalyzer = element.attributeValue("searchAnalyzer");
+                    if(StringUtils.isNoneBlank(indexAnalyzer)){
+                        filed.setIndexAnalyzer(indexAnalyzer);
+                    }
+                    if(StringUtils.isNoneBlank(searchAnalyzer)){
+                        filed.setSearchAnalyzer(searchAnalyzer);
+                    }
                 }
                 // 权重
                 String weight = element.attributeValue("weight");
