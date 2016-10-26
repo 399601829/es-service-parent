@@ -42,6 +42,16 @@ public class Condition implements Serializable {
     private float boost;
 
     /**
+     * 分词器
+     */
+    private String analyzer;
+
+    /**
+     * 拼音值
+     */
+    private String pinyinValue;
+
+    /**
      * value转换为拼音搜索
      */
     private PinyinType pattern;
@@ -51,8 +61,6 @@ public class Condition implements Serializable {
      */
     private boolean spaceSplit;
 
-    
-    
     /**
      * 
      */
@@ -110,8 +118,15 @@ public class Condition implements Serializable {
         return boost;
     }
 
+    public String getAnalyzer() {
+        return analyzer;
+    }
+
     public String getValue() {
         if (pattern != null) {
+            if (StringUtils.isNotBlank(pinyinValue)) {
+                return pinyinValue;
+            }
             Set<String> words = new HashSet<String>();
             switch (pattern) {
             case PINYIN:
@@ -127,11 +142,12 @@ public class Condition implements Serializable {
             default:
                 break;
             }
-            return StringUtils.join(words, ",");
+            pinyinValue = StringUtils.join(words, ",");
+            return pinyinValue;
         }
         return value;
     }
-    
+
     public boolean isSpaceSplit() {
         return spaceSplit && value.contains(" ");
     }
@@ -186,5 +202,9 @@ public class Condition implements Serializable {
 
     public boolean isNeedBoost() {
         return boost == 0f ? false : true;
+    }
+
+    public boolean isNeedAnalyzer() {
+        return analyzer == null ? false : true;
     }
 }

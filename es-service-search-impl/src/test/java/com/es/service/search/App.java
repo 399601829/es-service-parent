@@ -45,20 +45,20 @@ public class App {
         //String keyWord = "wodeshi";
         //String keyWord = "wds";
         //String keyWord = "wdsj";
-        String keyWord = "我的世界";
+        String keyWord = "w的s界";
         SearchCondition term = new SearchCondition(SearchType.TERM, ConditionType.OR);
         term.add("NAME", keyWord);
         term.add("ENNAME", keyWord);
 
-        // SearchCondition prefix = new SearchCondition(SearchType.PREFIX, ConditionType.OR);
-        // prefix.add("NAME_QUERY", keyWord);
+        SearchCondition prefix = new SearchCondition(SearchType.PREFIX, ConditionType.OR);
+        prefix.add("NAME_QUERY", keyWord);
         // prefix.add("ENNAME", keyWord);
 
         SearchCondition match = new SearchCondition(SearchType.MATCHING_PHRASE, ConditionType.OR);
         match.add("NAME_QUERY", keyWord, true);
 
         SearchCondition fuzz = new SearchCondition(SearchType.FUZZ, ConditionType.OR);
-        fuzz.add("NAME_QUERY", keyWord,true);
+        //fuzz.add("NAME_QUERY", keyWord,true);
         fuzz.add("ENNAME_QUERY", keyWord);
 
         SearchCondition query_string = new SearchCondition(SearchType.QUERY_STRING,
@@ -68,7 +68,7 @@ public class App {
 
         EsRequest request = new EsRequest(IndexType.RESOURCES, 1, 10);
         request.orSearchCondition(term);
-        // request.orSearchCondition(prefix);
+        request.orSearchCondition(prefix);
         request.orSearchCondition(match);
         request.orSearchCondition(fuzz);
         request.orSearchCondition(query_string);
