@@ -17,6 +17,8 @@ import org.elasticsearch.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 /**
@@ -232,7 +234,7 @@ public class PinYinHelper {
         }
         return builds;
     }
-    
+
     /**
      * 首字母解析，只解析汉字，英文，数字（包含多音字）
      * 
@@ -256,7 +258,7 @@ public class PinYinHelper {
                 if (s_ch.matches("[\u4e00-\u9fa5]+")) {
                     // 汉字
                     String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(ch[i], format);
-                    for(String pinyin : pinyinArray){
+                    for (String pinyin : pinyinArray) {
                         yin.add(String.valueOf(pinyin.charAt(0)));
                     }
                 } else if (s_ch.matches("[\u0030-\u0039]+")) {
@@ -266,7 +268,7 @@ public class PinYinHelper {
                     // a-zA-Z
                     yin.add(s_ch);
                 }
-                
+
                 for (int j = 0, len = builds.size(); j < len; j++) {
                     String temp = builds.get(j).toString();
                     int ycount = 0;
@@ -279,7 +281,7 @@ public class PinYinHelper {
                         ycount++;
                     }
                 }
-                
+
             }
         } catch (BadHanyuPinyinOutputFormatCombination e) {
             e.printStackTrace();
@@ -287,12 +289,36 @@ public class PinYinHelper {
         return builds;
     }
 
+    /**
+     * 检测是否包含拼音
+     * 
+     * @param text
+     * @return
+     */
+    public static boolean isContainPinYin(String text) {
+        char[] array = text.toCharArray();
+        for (int i = 0; i < array.length; i++) {
+            int c = (int) array[i];
+            //A-Z 65-90
+            //a-z 97-122
+            if (65 <= c && c <= 90) {
+                return true;
+            }
+            if (97 <= c && c <= 122) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) throws BadHanyuPinyinOutputFormatCombination {
         // String s1 = "大话西游";
         // String s2 = getAnalyzePinYin(s1) + "," + getAnalyzePinYinPrefix(s1);
         // System.out.println(s1);
         // System.out.println(s2);
-        //System.out.println(getPinYinByMultitone("阿调空调"));
-        System.out.println(getPinYinPrefixByMultitone("阿调空调"));
+        // System.out.println(getPinYinByMultitone("阿调空调"));
+        // System.out.println(getPinYinPrefixByMultitone("阿调空调"));
+        System.out.println(isContainPinYin("老wang"));
+
     }
 }

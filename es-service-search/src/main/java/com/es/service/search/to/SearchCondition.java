@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
 
+import com.es.service.common.util.PinYinHelper;
 import com.es.service.search.type.ConditionType;
 import com.es.service.search.type.PinyinType;
 import com.es.service.search.type.SearchType;
@@ -119,8 +120,11 @@ public final class SearchCondition implements Serializable {
      * @return
      */
     public SearchCondition add(Object field, Object value, PinyinType valueConvertPinyin) {
-        this.conditions.add(new Condition(String.valueOf(field), String.valueOf(value),
-                valueConvertPinyin));
+        //检测value是否包含拼音
+        if(PinYinHelper.isContainPinYin(String.valueOf(value))){
+            this.conditions.add(new Condition(String.valueOf(field), String.valueOf(value),
+                    valueConvertPinyin));
+        }
         return this;
     }
 
